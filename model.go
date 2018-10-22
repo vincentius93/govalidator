@@ -5,8 +5,6 @@ var tags =[...]string{
 	"type", //number, text
 	"min", //number of min value
 	"max", // number of max value
-	"length", // number of length value
-	"min_length", //number of minimum length value
 	"format",//email
 }
 
