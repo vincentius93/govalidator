@@ -60,8 +60,11 @@ func (a email)validate()(error){
 	if ok == false{
 		return myerr(INVALID_STRING,a.name)
 	}
+	if a.required == false && a.val.(string) == ""{
+		return nil
+	}
 	mail := regexp.MustCompile(MAIL_FORMAT)
-	if !mail.MatchString(a.val.(string)) && a.required == true{
+	if !mail.MatchString(a.val.(string)){
 		return myerr(INVALID_EMAIL,a.name)
 	}
 	return nil

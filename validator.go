@@ -30,10 +30,10 @@ func validateTags(field reflect.StructField,value interface{})(err error){
 
 	for i := 0; i< len(tags);i++{
 		tag,stat := field.Tag.Lookup(tags[i])
-		field_tag,stat := field.Tag.Lookup("field")
+		field_tag,stat_required := field.Tag.Lookup("field")
 		required := false
 		if stat == true{
-			if stat == true && field_tag == "required"{
+			if stat_required == true && field_tag == "required"{
 				required = true
 			}
 			structInfo := structDetail{

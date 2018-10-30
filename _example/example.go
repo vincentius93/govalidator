@@ -33,14 +33,14 @@ func main() {
 
 
 func simpleStruct(){
-	d := Address{City:"BANDUNG",Phone:"asda,sdnasdnsa, adalafaa",Street:"asd@gmail.com"}
+	d := Address{City:"BANDUNG",Phone:"1234",Street:"aas@gmail.com"}
 	err := validator.Validate(d)
 	fmt.Println(err)
 }
 
 func nestedSturct(){
-	d := Address{City:"BANDUNG",Phone:"asda,sdnasdnsa, adalafaa",Street:"asd@gmail.com"}
-	a := User{FirstName:"udin",Age:0,Address:d}
+	d := Address{City:"BANDUNG",Phone:"88766524928347384",Street:"asd@gmail.com"}
+	a := User{FirstName:"udin",Age:0,Myage:3,Address:d}
 	err := validator.Validate(a)
 	fmt.Println(err)
 }
