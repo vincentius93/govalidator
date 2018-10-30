@@ -6,7 +6,6 @@ import (
 )
 
 func Validate(mystruct interface{})(err error){
-
 	field := reflect.TypeOf(mystruct)
 	value := reflect.ValueOf(mystruct)
 	if field.Kind() != reflect.Struct{
@@ -27,7 +26,6 @@ func Validate(mystruct interface{})(err error){
 	return err
 }
 func validateTags(field reflect.StructField,value interface{})(err error){
-
 	for i := 0; i< len(tags);i++{
 		tag,stat := field.Tag.Lookup(tags[i])
 		field_tag,stat_required := field.Tag.Lookup("field")
@@ -47,14 +45,11 @@ func validateTags(field reflect.StructField,value interface{})(err error){
 			if err != nil {
 				return err
 			}
-
 		}
 	}
 	return err
 }
-
 func getType(s *structDetail)myvalidator{
-
 	tagsValue := map[string]myvalidator{
 		"email":email{s},
 		"text":text{s},
@@ -78,13 +73,17 @@ func getType(s *structDetail)myvalidator{
 		}
 		tagsValue[s.tag_name] = max{max:lenChar,detail:s}
 		res = tagsValue["max"]
+	case "startswith":
+		tagsValue[s.tag_name] = startswith{s}
+		res = tagsValue["startswith"]
+	case "endswith":
+		tagsValue[s.tag_name] = endswith{s}
+		res = tagsValue["endswith"]
 	default:
-
 		if _, ok := tagsValue[s.tag_value]; ok {
 			res = tagsValue[s.tag_value]
 		}
 	}
-
 	return res
 }
 

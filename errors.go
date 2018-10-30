@@ -11,6 +11,8 @@ const(
 	INVALID_STRING
 	MIN
 	MAX
+	STARTS_WITH
+	ENDS_WITH
 )
 func (num num_error)String()string{
 	error := [...]string{
@@ -22,6 +24,8 @@ func (num num_error)String()string{
 		"Expected string value!",
 		"Should be greater than",
 		"Should be less than",
+		"Should starts with",
+		"Should ends with",
 	}
 	return error[num]
 }

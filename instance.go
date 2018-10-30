@@ -1,6 +1,9 @@
 package validator
 
-import "regexp"
+import (
+	"regexp"
+	"strings"
+)
 
 func (d def)validate()error{
 	return myerr(INVALID_TYPE,d.name)
@@ -67,5 +70,33 @@ func (a email)validate()(error){
 	if !mail.MatchString(a.val.(string)){
 		return myerr(INVALID_EMAIL,a.name)
 	}
+	return nil
+}
+func (s startswith)validate()(error){
+	_,ok :=s.val.(string)
+	if ok == false{
+		return myerr(INVALID_STRING,s.name)
+	}
+	if s.required == false && s.val.(string) == ""{
+		return nil
+	}
+	if strings.HasPrefix(s.val.(string), s.tag_value)==false {
+		return myerr(STARTS_WITH,s.name,s.tag_value)
+	}
+
+	return nil
+}
+func (s endswith)validate()(error){
+	_,ok :=s.val.(string)
+	if ok == false{
+		return myerr(INVALID_STRING,s.name)
+	}
+	if s.required == false && s.val.(string) == ""{
+		return nil
+	}
+	if strings.HasSuffix(s.val.(string), s.tag_value)==false {
+		return myerr(ENDS_WITH,s.name,s.tag_value)
+	}
+
 	return nil
 }

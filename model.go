@@ -6,6 +6,8 @@ var tags =[...]string{
 	"min", //number of min value
 	"max", // number of max value
 	"format",//email
+	"startswith",
+	"endswith",
 }
 
 const MAIL_FORMAT  = `\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z`
@@ -26,11 +28,13 @@ type number struct {*structDetail}
 type text struct {*structDetail}
 type email struct {*structDetail}
 type required struct {*structDetail}
+type startswith struct {*structDetail}
+type endswith struct {*structDetail}
 type min struct {
-	min int
+	min 		int
 	detail 		*structDetail
 }
 type max struct {
-	max int
+	max 		int
 	detail 		*structDetail
 }
