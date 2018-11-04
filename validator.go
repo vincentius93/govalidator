@@ -8,22 +8,30 @@ import (
 func Validate(mystruct interface{})(err error){
 	field := reflect.TypeOf(mystruct)
 	value := reflect.ValueOf(mystruct)
-	if field.Kind() != reflect.Struct{
+	if field.Kind() != reflect.Struct && field.Kind() != reflect.Slice{
 		return myerr(STRUCT_ERROR)
 	}
-	for i:= 0 ; i< field.NumField();i++{
-		kind := field.Field(i).Type.Kind()
-		val := value.Field(i).Interface()
-		if kind == reflect.Struct{
-			err = Validate(val)
-		}else if kind != reflect.Map || kind != reflect.Array{
-			err = validateTags(field.Field(i),val)
-		}
-		if err != nil {
+	switch field.Kind() {
+	case reflect.Slice:
+		err = fetchSlice(value)
+		if err != nil{
 			return
 		}
+	default:
+		for i:= 0 ; i< field.NumField();i++{
+			kind := field.Field(i).Type.Kind()
+			val := value.Field(i).Interface()
+			if kind == reflect.Struct || kind == reflect.Slice{
+				err = Validate(val)
+			}else if kind != reflect.Map || kind != reflect.Array{
+				err = validateTags(field.Field(i),val)
+			}
+			if err != nil {
+				return
+			}
+		}
 	}
-	return err
+	return
 }
 func validateTags(field reflect.StructField,value interface{})(err error){
 	for i := 0; i< len(tags);i++{
@@ -87,9 +95,14 @@ func getType(s *structDetail)myvalidator{
 	return res
 }
 
-
-
-
-
-
+func fetchSlice(t reflect.Value)(err error){
+	for i:=0 ; i < t.Len();i++{
+		val := t.Index(i).Interface()
+		err = Validate(val)
+		if err != nil {
+			return
+		}
+	}
+	return err
+}
 

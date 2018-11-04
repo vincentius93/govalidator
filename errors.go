@@ -16,7 +16,7 @@ const(
 )
 func (num num_error)String()string{
 	error := [...]string{
-		"Not a struct type or cannot accept memory address of struct!",
+		"Not a struct type or memory address of struct!",
 		"Is required!",
 		"Expected number value!",
 		"Email format invalid",
