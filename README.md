@@ -12,6 +12,7 @@ GoValidator is a Package validator implements value validations for structs and 
 - ##### [`max`] value : (string number)
 - ##### [`startswith`] value : (string)
 - ##### [`endswith`] value : (string)
+- ##### [`value_of`] value : (string)(can accept 1 or more string value seperated with ,(coma))
 - ##### [`format`] value : email
 
 

@@ -8,6 +8,7 @@ var tags =[...]string{
 	"format",//email
 	"startswith",
 	"endswith",
+	"value_of",
 }
 
 const MAIL_FORMAT  = `\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z`
@@ -30,6 +31,7 @@ type email struct {*structDetail}
 type required struct {*structDetail}
 type startswith struct {*structDetail}
 type endswith struct {*structDetail}
+type valueOf struct {*structDetail}
 type min struct {
 	min 		int
 	detail 		*structDetail

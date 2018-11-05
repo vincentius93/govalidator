@@ -13,6 +13,7 @@ const(
 	MAX
 	STARTS_WITH
 	ENDS_WITH
+	VALUE_OF
 )
 func (num num_error)String()string{
 	error := [...]string{
@@ -26,6 +27,7 @@ func (num num_error)String()string{
 		"Should be less than",
 		"Should starts with",
 		"Should ends with",
+		"Missing value, value should be one of",
 	}
 	return error[num]
 }

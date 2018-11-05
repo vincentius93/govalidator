@@ -100,3 +100,12 @@ func (s endswith)validate()(error){
 
 	return nil
 }
+func (v valueOf)validate()(error){
+	value := strings.Split(v.tag_value,",")
+	for i:= 0 ; i < len(value); i++{
+		if v.val.(string) == value[i]{
+			return nil
+		}
+	}
+	return myerr(VALUE_OF,v.name,v.tag_value)
+}

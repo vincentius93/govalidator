@@ -87,6 +87,9 @@ func getType(s *structDetail)myvalidator{
 	case "endswith":
 		tagsValue[s.tag_name] = endswith{s}
 		res = tagsValue["endswith"]
+	case "value_of":
+		tagsValue[s.tag_name] = valueOf{s}
+		res = tagsValue["value_of"]
 	default:
 		if _, ok := tagsValue[s.tag_value]; ok {
 			res = tagsValue[s.tag_value]

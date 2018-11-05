@@ -24,7 +24,7 @@ type Address struct {
 	Phone  string `min:"1" max:"10"`
 }
 type User1 struct {
-	FirstName      string
+	FirstName      string `value_of:"jhonny,john"`
 	LastName       string
 	Age            uint8
 	Email          string
