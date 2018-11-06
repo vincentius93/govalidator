@@ -10,7 +10,12 @@ func (d def)validate()error{
 	return myerr(INVALID_TYPE,d.name)
 }
 func (r required)validate()error{
-	if r.val =="" || r.val == nil{
+	value_kind := reflect.TypeOf(r.val).Kind()
+	value_len := 1
+	if value_kind != reflect.Int{
+		value_len = reflect.ValueOf(r.val).Len()
+	}
+	if r.val =="" || r.val == nil || value_len == 0 {
 		return myerr(ISREQUIRED,r.name)
 	}
 	return nil
@@ -125,7 +130,6 @@ func (v valueOf)validate()(error){
 	return myerr(VALUE_OF,v.name,v.tag_value)
 }
 func floatValue(value structDetail,compare int,tipe string)(err error){
-
 	floatVal := value.val.(float32)
 	compareVal := float32(compare)
 	switch tipe {

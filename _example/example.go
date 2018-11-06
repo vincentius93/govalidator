@@ -24,11 +24,11 @@ type Address struct {
 	Phone  string 	`min:"1" max:"10"`
 }
 type User1 struct {
-	FirstName      string		`value_of:"jhonny,john"`
-	LastName       string
+	FirstName      string		`value_of:"jhonny,john" field:"required"`
+	LastName       int
 	Age            float32		`min:"4" max:"100"`
 	Email          string
-	FavouriteColor string
+	FavouriteColor []string		`field:"required"`
 	Myage			int			`min:"1" max:"10"`
 	Address			[]Address
 }
@@ -68,7 +68,7 @@ func nestedArrayStruct(){
 	var d []Address
 	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@gmail.com"})
 	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@agmail.com"})
-	a := User1{FirstName:"john",Age:100,Myage:8,Address:d}
+	a := User1{FirstName:"john",Age:100,Myage:8,FavouriteColor:[]string{},Address:d}
 	err := validator.Validate(a)
 	fmt.Println(err)
 }

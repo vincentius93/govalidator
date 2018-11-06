@@ -19,11 +19,12 @@ func Validate(mystruct interface{})(err error){
 		}
 	default:
 		for i:= 0 ; i< field.NumField();i++{
-			kind := field.Field(i).Type.Kind()
+			type_kind := field.Field(i).Type.Kind()
 			val := value.Field(i).Interface()
-			if kind == reflect.Struct || kind == reflect.Slice{
+			value_kind := reflect.TypeOf(val).Kind()
+			if type_kind == reflect.Struct || type_kind == reflect.Slice && value_kind != reflect.Slice{
 				err = Validate(val)
-			}else if kind != reflect.Map || kind != reflect.Array{
+			}else if type_kind != reflect.Map || type_kind != reflect.Array{
 				err = validateTags(field.Field(i),val)
 			}
 			if err != nil {

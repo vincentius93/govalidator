@@ -29,6 +29,7 @@ Int/numeric : validate the value
 - Support Nested slice struct
 ### 05-11-2018
 - Support float32 type for min & max value
+- Support required value for slice data type
 ----
 ### Installation
 
