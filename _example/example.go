@@ -18,18 +18,18 @@ type User struct {
 
 // Address houses a users address information
 type Address struct {
-	Street string `format:"email" type:"text"`
+	Street string 	`format:"email" type:"text"`
 	City   string
-	Planet string `startswith:"u" endswith:"s"`
-	Phone  string `min:"1" max:"10"`
+	Planet string 	`startswith:"u" endswith:"s"`
+	Phone  string 	`min:"1" max:"10"`
 }
 type User1 struct {
-	FirstName      string `value_of:"jhonny,john"`
+	FirstName      string		`value_of:"jhonny,john"`
 	LastName       string
-	Age            uint8
+	Age            float32		`min:"4" max:"100"`
 	Email          string
 	FavouriteColor string
-	Myage			int		   `min:"1" max:"10"`
+	Myage			int			`min:"1" max:"10"`
 	Address			[]Address
 }
 
@@ -43,7 +43,6 @@ func main() {
 	fmt.Println("RETURN VALUE OF NESTED ARRAY STRUCT")
 	nestedArrayStruct()
 }
-
 
 func simpleStruct(){
 	d := Address{City:"BANDUNG",Phone:"1234",Street:"aas@gmail.com",Planet:"uranusa"}
@@ -68,8 +67,8 @@ func arrayStruct(){
 func nestedArrayStruct(){
 	var d []Address
 	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@gmail.com"})
-	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranu",Street:"asd@agmail.com"})
-	a := User1{FirstName:"udin",Age:0,Myage:3,Address:d}
+	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@agmail.com"})
+	a := User1{FirstName:"john",Age:100,Myage:8,Address:d}
 	err := validator.Validate(a)
 	fmt.Println(err)
 }

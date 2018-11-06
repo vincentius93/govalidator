@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"reflect"
 	"regexp"
 	"strings"
 )
@@ -29,31 +30,45 @@ func (t number)validate()error{
 	return nil
 }
 func (t min)validate()error{
+	var structVal *structDetail
+	structVal = t.detail
 	val,ok :=t.detail.val.(string)
 	if ok == true{
 		if len(val) < t.min{
 			return myerr(MIN,t.detail.name,t.detail.tag_value)
 		}
 	}else{
-
+		dataType :=reflect.ValueOf(t.detail.val).Kind()
 		intVal,_ := t.detail.val.(int)
-		if intVal < t.min{
-			return myerr(MIN,t.detail.name,t.detail.tag_value)
+		switch dataType {
+		case reflect.Float32:
+			return floatValue(*structVal,t.min,"min")
+		default:
+			if intVal < t.min{
+				return myerr(MIN,t.detail.name,t.detail.tag_value)
+			}
 		}
 	}
 	return nil
 }
 func (t max)validate()error{
+	var structVal *structDetail
+	structVal = t.detail
 	val,ok :=t.detail.val.(string)
 	if ok == true{
 		if len(val) > t.max{
 			return myerr(MAX,t.detail.name,t.detail.tag_value)
 		}
 	}else{
-
+		dataType :=reflect.ValueOf(t.detail.val).Kind()
 		intVal,_ := t.detail.val.(int)
-		if intVal > t.max{
-			return myerr(MAX,t.detail.name,t.detail.tag_value)
+		switch dataType {
+		case reflect.Float32:
+			return floatValue(*structVal,t.max,"max")
+		default:
+			if intVal > t.max{
+				return myerr(MAX,t.detail.name,t.detail.tag_value)
+			}
 		}
 	}
 	return nil
@@ -108,4 +123,20 @@ func (v valueOf)validate()(error){
 		}
 	}
 	return myerr(VALUE_OF,v.name,v.tag_value)
+}
+func floatValue(value structDetail,compare int,tipe string)(err error){
+
+	floatVal := value.val.(float32)
+	compareVal := float32(compare)
+	switch tipe {
+	case "min":
+		if floatVal < compareVal{
+			return myerr(MIN,value.name,value.tag_value)
+		}
+	case "max":
+		if floatVal > compareVal{
+			return myerr(MAX,value.name,value.tag_value)
+		}
+	}
+	return nil
 }

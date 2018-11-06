@@ -24,9 +24,11 @@ Int/numeric : validate the value
 ### 30-10-2018
 - Add Handler for email format when its not required
 - Add startswith and Endswith validation
-### 04-05-2018
+### 04-11-2018
 - Support slice struct
 - Support Nested slice struct
+### 05-11-2018
+- Support float32 type for min & max value
 ----
 ### Installation
 
