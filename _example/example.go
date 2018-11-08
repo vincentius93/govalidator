@@ -26,11 +26,12 @@ type Address struct {
 type User1 struct {
 	FirstName      string		`value_of:"jhonny,john" field:"required"`
 	LastName       int
-	Age            float32		`min:"4" max:"100"`
+	Age            float32		`min:"4" max:"100" field:"required"`
 	Email          string
 	FavouriteColor []string		`field:"required"`
 	Myage			int			`min:"1" max:"10"`
 	Address			[]Address
+	Testing 		float32		`field:"required"`
 }
 
 func main() {

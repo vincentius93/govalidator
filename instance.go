@@ -12,7 +12,7 @@ func (d def)validate()error{
 func (r required)validate()error{
 	value_kind := reflect.TypeOf(r.val).Kind()
 	value_len := 1
-	if value_kind != reflect.Int{
+	if value_kind != reflect.Int && value_kind != reflect.Float32{
 		value_len = reflect.ValueOf(r.val).Len()
 	}
 	if r.val =="" || r.val == nil || value_len == 0 {
