@@ -31,6 +31,9 @@ Int/numeric : validate the value
 - Support float32 type for min & max value
 - Support required value for slice data type
 ----
+### 13-11-2018
+- Add handler for type:number on string value
+----
 ### Installation
 
 ```

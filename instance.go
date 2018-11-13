@@ -3,6 +3,7 @@ package validator
 import (
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -30,7 +31,14 @@ func (t text)validate()error{
 func (t number)validate()error{
 	_,ok :=t.val.(int)
 	if ok == false{
-		return myerr(INVALID_INT, t.name)
+		_,validString := t.val.(string)
+		if validString == false{
+			return myerr(INVALID_INT, t.name)
+		}
+		_,err := strconv.Atoi(t.val.(string))
+		if err != nil {
+			return myerr(INVALID_CONVERSION_INT, t.name)
+		}
 	}
 	return nil
 }

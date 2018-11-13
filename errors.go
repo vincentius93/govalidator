@@ -14,6 +14,7 @@ const(
 	STARTS_WITH
 	ENDS_WITH
 	VALUE_OF
+	INVALID_CONVERSION_INT
 )
 func (num num_error)String()string{
 	error := [...]string{
@@ -28,6 +29,7 @@ func (num num_error)String()string{
 		"Should starts with",
 		"Should ends with",
 		"Missing value, value should be one of",
+		"Invalid integer conversion for number type",
 	}
 	return error[num]
 }

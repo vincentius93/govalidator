@@ -21,7 +21,7 @@ type Address struct {
 	Street string 	`format:"email" type:"text"`
 	City   string
 	Planet string 	`startswith:"u" endswith:"s"`
-	Phone  string 	`min:"1" max:"10"`
+	Phone  string 	`min:"1" max:"10" type:"number"`
 }
 type User1 struct {
 	FirstName      string		`value_of:"jhonny,john" field:"required"`
@@ -46,7 +46,7 @@ func main() {
 }
 
 func simpleStruct(){
-	d := Address{City:"BANDUNG",Phone:"1234",Street:"aas@gmail.com",Planet:"uranusa"}
+	d := Address{City:"BANDUNG",Phone:"9663",Street:"aas@gmail.com",Planet:"uranus"}
 	err := validator.Validate(d)
 	fmt.Println(err)
 }
