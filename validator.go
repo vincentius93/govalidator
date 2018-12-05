@@ -65,6 +65,8 @@ func getType(s *structDetail)myvalidator{
 		"number":number{s},
 		"required":required{s},
 		"default":def{s},
+		"alphabet":alphabet{s},
+		"alphanumeric":alphanumeric{s},
 	}
 	res := tagsValue["default"]
 	switch s.tag_name {

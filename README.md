@@ -13,7 +13,7 @@ GoValidator is a Package validator implements value validations for structs and 
 - ##### [`startswith`] value : (string)
 - ##### [`endswith`] value : (string)
 - ##### [`value_of`] value : (string)(can accept 1 or more string value seperated with ,(coma))
-- ##### [`format`] value : email
+- ##### [`format`] value : email /alphabet/alphanumeric
 
 
 Tag `min` / `max` will automatically validate based on the value type.
@@ -30,9 +30,10 @@ Int/numeric : validate the value
 ### 05-11-2018
 - Support float32 type for min & max value
 - Support required value for slice data type
-----
 ### 13-11-2018
 - Add handler for type:number on string value
+### 06-12-2018
+- Add alphabet & alphanumeric format
 ----
 ### Installation
 

@@ -11,7 +11,11 @@ var tags =[...]string{
 	"value_of",
 }
 
-const MAIL_FORMAT  = `\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z`
+const (
+	MAIL_FORMAT  = `\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z`
+	ALPHANUMERIC = `^[A-Za-z0-9]*$`
+	ALPHABET = `^[A-Za-z]*$`
+)
 
 type myvalidator interface {
 	validate()(error)
@@ -28,6 +32,8 @@ type def struct {*structDetail}
 type number struct {*structDetail}
 type text struct {*structDetail}
 type email struct {*structDetail}
+type alphanumeric struct{*structDetail}
+type alphabet struct {*structDetail}
 type required struct {*structDetail}
 type startswith struct {*structDetail}
 type endswith struct {*structDetail}

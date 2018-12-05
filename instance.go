@@ -100,6 +100,34 @@ func (a email)validate()(error){
 	}
 	return nil
 }
+func (a alphabet)validate()(error){
+	_,ok :=a.val.(string)
+	if ok == false{
+		return myerr(INVALID_STRING,a.name)
+	}
+	if a.required == false && a.val.(string) == ""{
+		return nil
+	}
+	mail := regexp.MustCompile(ALPHABET)
+	if !mail.MatchString(a.val.(string)){
+		return myerr(INVALID_ALPHABET,a.name)
+	}
+	return nil
+}
+func (a alphanumeric)validate()(error){
+	_,ok :=a.val.(string)
+	if ok == false{
+		return myerr(INVALID_STRING,a.name)
+	}
+	if a.required == false && a.val.(string) == ""{
+		return nil
+	}
+	mail := regexp.MustCompile(ALPHANUMERIC)
+	if !mail.MatchString(a.val.(string)){
+		return myerr(INVALID_ALPHANUMERIC,a.name)
+	}
+	return nil
+}
 func (s startswith)validate()(error){
 	_,ok :=s.val.(string)
 	if ok == false{

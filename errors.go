@@ -15,6 +15,8 @@ const(
 	ENDS_WITH
 	VALUE_OF
 	INVALID_CONVERSION_INT
+	INVALID_ALPHABET
+	INVALID_ALPHANUMERIC
 )
 func (num num_error)String()string{
 	error := [...]string{
@@ -30,6 +32,8 @@ func (num num_error)String()string{
 		"Should ends with",
 		"Missing value, value should be one of",
 		"Invalid integer conversion for number type",
+		"Alphabet format invalid!",
+		"Alphanumeric format invalid!",
 	}
 	return error[num]
 }
