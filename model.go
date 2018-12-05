@@ -13,8 +13,8 @@ var tags =[...]string{
 
 const (
 	MAIL_FORMAT  = `\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z`
-	ALPHANUMERIC = `^[A-Za-z0-9]*$`
-	ALPHABET = `^[A-Za-z]*$`
+	ALPHANUMERIC = `^[A-Za-z0-9 ]*$`
+	ALPHABET = `^[A-Za-z ]*$`
 )
 
 type myvalidator interface {

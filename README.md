@@ -34,6 +34,7 @@ Int/numeric : validate the value
 - Add handler for type:number on string value
 ### 06-12-2018
 - Add alphabet & alphanumeric format
+- Allow space on alphabet & alphanumeric format
 ----
 ### Installation
 
