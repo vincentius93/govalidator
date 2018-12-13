@@ -13,7 +13,7 @@ func (d def)validate()error{
 func (r required)validate()error{
 	value_kind := reflect.TypeOf(r.val).Kind()
 	value_len := 1
-	if value_kind != reflect.Int && value_kind != reflect.Float32{
+	if value_kind != reflect.Int && value_kind != reflect.Float64{
 		value_len = reflect.ValueOf(r.val).Len()
 	}
 	if r.val =="" || r.val == nil || value_len == 0 {
@@ -54,7 +54,7 @@ func (t min)validate()error{
 		dataType :=reflect.ValueOf(t.detail.val).Kind()
 		intVal,_ := t.detail.val.(int)
 		switch dataType {
-		case reflect.Float32:
+		case reflect.Float64:
 			return floatValue(*structVal,t.min,"min")
 		default:
 			if intVal < t.min{
@@ -76,7 +76,7 @@ func (t max)validate()error{
 		dataType :=reflect.ValueOf(t.detail.val).Kind()
 		intVal,_ := t.detail.val.(int)
 		switch dataType {
-		case reflect.Float32:
+		case reflect.Float64:
 			return floatValue(*structVal,t.max,"max")
 		default:
 			if intVal > t.max{
@@ -166,8 +166,8 @@ func (v valueOf)validate()(error){
 	return myerr(VALUE_OF,v.name,v.tag_value)
 }
 func floatValue(value structDetail,compare int,tipe string)(err error){
-	floatVal := value.val.(float32)
-	compareVal := float32(compare)
+	floatVal := value.val.(float64)
+	compareVal := float64(compare)
 	switch tipe {
 	case "min":
 		if floatVal < compareVal{
