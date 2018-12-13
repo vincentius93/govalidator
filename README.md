@@ -35,6 +35,8 @@ Int/numeric : validate the value
 ### 06-12-2018
 - Add alphabet & alphanumeric format
 - Allow space on alphabet & alphanumeric format
+### 13-12-2018
+- Change float32 type to float 64 type
 ----
 ### Installation
 
