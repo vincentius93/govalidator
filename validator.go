@@ -3,6 +3,7 @@ package validator
 import (
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 func Validate(mystruct interface{})(err error){
@@ -38,10 +39,17 @@ func validateTags(field reflect.StructField,value interface{})(err error){
 	for i := 0; i< len(tags);i++{
 		tag,stat := field.Tag.Lookup(tags[i])
 		field_tag,stat_required := field.Tag.Lookup("field")
+		json_tag,json_status := field.Tag.Lookup("json")
+
 		required := false
 		if stat == true{
 			if stat_required == true && field_tag == "required"{
 				required = true
+			}
+			json_name := ""
+			if json_status{
+				jname := strings.Split(json_tag,",")
+				json_name= jname[0]
 			}
 			structInfo := structDetail{
 				name:field.Name,
@@ -49,6 +57,7 @@ func validateTags(field reflect.StructField,value interface{})(err error){
 				tag_name:tags[i],
 				tag_value:tag,
 				required:required,
+				json_name:json_name,
 			}
 			err:= getType(&structInfo).validate()
 			if err != nil {

@@ -25,6 +25,7 @@ type structDetail struct {
 	val			interface{}
 	tag_name	string
 	tag_value	string
+	json_name	string
 	required	bool
 }
 type num_error int

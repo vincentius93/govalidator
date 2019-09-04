@@ -37,6 +37,9 @@ Int/numeric : validate the value
 - Allow space on alphabet & alphanumeric format
 ### 13-12-2018
 - Change float32 type to float 64 type
+### 04-09-2019
+- add return json name if there's json tag
+- trim spaces for required string
 ----
 ### Installation
 

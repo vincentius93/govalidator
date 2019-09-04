@@ -7,8 +7,8 @@ import (
 
 // User contains user information
 type User struct {
-	FirstName      string
-	LastName       string
+	FirstName      string 	`json:"first_name,omitempty"`
+	LastName       string	`json:"last_name"`
 	Age            uint8
 	Email          string
 	FavouriteColor string
@@ -26,7 +26,7 @@ type Address struct {
 type User1 struct {
 	FirstName      string		`value_of:"jhonny,john" field:"required"`
 	LastName       int
-	Age            float64		`min:"4" max:"100" field:"required"`
+	Age            float64		`json:"umur" min:"4" max:"100" field:"required"`
 	Email          string
 	FavouriteColor []string		`field:"required"`
 	Myage			int			`min:"1" max:"10"`
@@ -69,7 +69,7 @@ func nestedArrayStruct(){
 	var d []Address
 	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@gmail.com"})
 	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@agmail.com"})
-	a := User1{FirstName:"john",Age:100,Myage:8,FavouriteColor:[]string{"asd"},Address:d}
+	a := User1{FirstName:"  ",Age:4.5,Myage:8,FavouriteColor:[]string{"asd"},Address:d}
 	err := validator.Validate(a)
 	fmt.Println(err)
 }

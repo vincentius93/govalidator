@@ -37,7 +37,12 @@ func (num num_error)String()string{
 	}
 	return error[num]
 }
-
+func parseName(st structDetail)string{
+	if st.json_name== ""{
+		return st.name
+	}
+	return st.json_name
+}
 func myerr (num num_error,args ...interface{})error{
 
 	new_err := errors.New(num.String())
