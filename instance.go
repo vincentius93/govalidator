@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"fmt"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -48,6 +49,7 @@ func (t number)validate()error{
 }
 func (t min)validate()error{
 	var structVal *structDetail
+	fmt.Println(structVal)
 	structVal = t.detail
 	val,ok :=t.detail.val.(string)
 	if ok == true{
@@ -181,6 +183,18 @@ func floatValue(value structDetail,compare int,tipe string)(err error){
 		if floatVal > compareVal{
 			return myerr(MAX,parseName(value),value.tag_value)
 		}
+	}
+	return nil
+}
+func (v match)validate()(error){
+	pattern,_ := regexp.Compile(v.tag_value)
+	_,ok:= v.val.(string)
+	if !ok{
+		return myerr(INVALID_STRING,parseName(*v.structDetail))
+	}
+	ismatch := pattern.MatchString(v.val.(string))
+	if !ismatch{
+		return myerr(MATCHSTRING,parseName(*v.structDetail))
 	}
 	return nil
 }

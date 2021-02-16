@@ -6,27 +6,30 @@ import (
 	"strings"
 )
 
-func Validate(mystruct interface{})(err error){
+func Validate(mystruct interface{}) (err error) {
 	field := reflect.TypeOf(mystruct)
 	value := reflect.ValueOf(mystruct)
-	if field.Kind() != reflect.Struct && field.Kind() != reflect.Slice{
+	if field.Kind() != reflect.Struct && field.Kind() != reflect.Slice {
 		return myerr(STRUCT_ERROR)
 	}
 	switch field.Kind() {
 	case reflect.Slice:
 		err = fetchSlice(value)
-		if err != nil{
+		if err != nil {
 			return
 		}
 	default:
-		for i:= 0 ; i< field.NumField();i++{
+		for i := 0; i < field.NumField(); i++ {
 			type_kind := field.Field(i).Type.Kind()
-			val := value.Field(i).Interface()
+			val := value.Field(i)
+			if !val.CanInterface() {
+				continue
+			}
 			value_kind := reflect.TypeOf(val).Kind()
-			if type_kind == reflect.Struct || type_kind == reflect.Slice && value_kind != reflect.Slice{
-				err = Validate(val)
-			}else if type_kind != reflect.Map || type_kind != reflect.Array{
-				err = validateTags(field.Field(i),val)
+			if type_kind == reflect.Struct || type_kind == reflect.Slice && value_kind != reflect.Slice {
+				err = Validate(val.Interface())
+			} else if type_kind != reflect.Map || type_kind != reflect.Array {
+				err = validateTags(field.Field(i), val.Interface())
 			}
 			if err != nil {
 				return
@@ -35,31 +38,30 @@ func Validate(mystruct interface{})(err error){
 	}
 	return
 }
-func validateTags(field reflect.StructField,value interface{})(err error){
-	for i := 0; i< len(tags);i++{
-		tag,stat := field.Tag.Lookup(tags[i])
-		field_tag,stat_required := field.Tag.Lookup("field")
-		json_tag,json_status := field.Tag.Lookup("json")
-
+func validateTags(field reflect.StructField, value interface{}) (err error) {
+	for i := 0; i < len(tags); i++ {
+		tag, stat := field.Tag.Lookup(tags[i])
+		field_tag, stat_required := field.Tag.Lookup("field")
+		json_tag, json_status := field.Tag.Lookup("json")
 		required := false
-		if stat == true{
-			if stat_required == true && field_tag == "required"{
+		if stat == true {
+			if stat_required == true && field_tag == "required" {
 				required = true
 			}
 			json_name := ""
-			if json_status{
-				jname := strings.Split(json_tag,",")
-				json_name= jname[0]
+			if json_status {
+				jname := strings.Split(json_tag, ",")
+				json_name = jname[0]
 			}
 			structInfo := structDetail{
-				name:field.Name,
-				val:value,
-				tag_name:tags[i],
-				tag_value:tag,
-				required:required,
-				json_name:json_name,
+				name:      field.Name,
+				val:       value,
+				tag_name:  tags[i],
+				tag_value: tag,
+				required:  required,
+				json_name: json_name,
 			}
-			err:= getType(&structInfo).validate()
+			err := getType(&structInfo).validate()
 			if err != nil {
 				return err
 			}
@@ -67,31 +69,32 @@ func validateTags(field reflect.StructField,value interface{})(err error){
 	}
 	return err
 }
-func getType(s *structDetail)myvalidator{
+func getType(s *structDetail) myvalidator {
 	tagsValue := map[string]myvalidator{
-		"email":email{s},
-		"text":text{s},
-		"number":number{s},
-		"required":required{s},
-		"default":def{s},
-		"alphabet":alphabet{s},
-		"alphanumeric":alphanumeric{s},
+		"email":        email{s},
+		"text":         text{s},
+		"number":       number{s},
+		"required":     required{s},
+		"default":      def{s},
+		"alphabet":     alphabet{s},
+		"alphanumeric": alphanumeric{s},
+		"match":        match{s},
 	}
 	res := tagsValue["default"]
 	switch s.tag_name {
 	case "min":
-		lenChar,err := strconv.Atoi(s.tag_value)
-		if err != nil{
+		lenChar, err := strconv.Atoi(s.tag_value)
+		if err != nil {
 			res = tagsValue["default"]
 		}
-		tagsValue[s.tag_name] = min{min:lenChar,detail:s}
+		tagsValue[s.tag_name] = min{min: lenChar, detail: s}
 		res = tagsValue["min"]
 	case "max":
-		lenChar,err := strconv.Atoi(s.tag_value)
-		if err != nil{
+		lenChar, err := strconv.Atoi(s.tag_value)
+		if err != nil {
 			res = tagsValue["default"]
 		}
-		tagsValue[s.tag_name] = max{max:lenChar,detail:s}
+		tagsValue[s.tag_name] = max{max: lenChar, detail: s}
 		res = tagsValue["max"]
 	case "startswith":
 		tagsValue[s.tag_name] = startswith{s}
@@ -102,6 +105,9 @@ func getType(s *structDetail)myvalidator{
 	case "value_of":
 		tagsValue[s.tag_name] = valueOf{s}
 		res = tagsValue["value_of"]
+	case "match":
+		tagsValue[s.tag_name] = match{s}
+		res = tagsValue["match"]
 	default:
 		if _, ok := tagsValue[s.tag_value]; ok {
 			res = tagsValue[s.tag_value]
@@ -110,8 +116,8 @@ func getType(s *structDetail)myvalidator{
 	return res
 }
 
-func fetchSlice(t reflect.Value)(err error){
-	for i:=0 ; i < t.Len();i++{
+func fetchSlice(t reflect.Value) (err error) {
+	for i := 0; i < t.Len(); i++ {
 		val := t.Index(i).Interface()
 		err = Validate(val)
 		if err != nil {
@@ -120,4 +126,3 @@ func fetchSlice(t reflect.Value)(err error){
 	}
 	return err
 }
-

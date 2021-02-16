@@ -9,6 +9,7 @@ var tags =[...]string{
 	"startswith",
 	"endswith",
 	"value_of",
+	"match",
 }
 
 const (
@@ -39,6 +40,7 @@ type required struct {*structDetail}
 type startswith struct {*structDetail}
 type endswith struct {*structDetail}
 type valueOf struct {*structDetail}
+type match struct {*structDetail}
 type min struct {
 	min 		int
 	detail 		*structDetail

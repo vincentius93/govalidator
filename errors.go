@@ -17,6 +17,7 @@ const(
 	INVALID_CONVERSION_INT
 	INVALID_ALPHABET
 	INVALID_ALPHANUMERIC
+	MATCHSTRING
 )
 func (num num_error)String()string{
 	error := [...]string{
@@ -34,6 +35,7 @@ func (num num_error)String()string{
 		"Invalid integer conversion for number type",
 		"Alphabet format invalid!",
 		"Alphanumeric format invalid!",
+		"Invalid Format",
 	}
 	return error[num]
 }

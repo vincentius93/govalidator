@@ -14,6 +14,7 @@ GoValidator is a Package validator implements value validations for structs and 
 - ##### [`endswith`] value : (string)
 - ##### [`value_of`] value : (string)(can accept 1 or more string value seperated with ,(coma))
 - ##### [`format`] value : email /alphabet/alphanumeric
+- ##### [`match`] value : regex pattern 
 
 
 Tag `min` / `max` will automatically validate based on the value type.
@@ -40,6 +41,10 @@ Int/numeric : validate the value
 ### 04-09-2019
 - add return json name if there's json tag
 - trim spaces for required string
+----
+### 16-02-2021
+- Handle Unexported Field
+- Add regex validation
 ----
 ### Installation
 
