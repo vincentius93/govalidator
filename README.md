@@ -46,6 +46,9 @@ Int/numeric : validate the value
 - Handle Unexported Field
 - Add regex validation
 ----
+### 24-02-2021
+- Handle int32 data type
+----
 ### Installation
 
 ```

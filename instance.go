@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"fmt"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -49,7 +48,6 @@ func (t number)validate()error{
 }
 func (t min)validate()error{
 	var structVal *structDetail
-	fmt.Println(structVal)
 	structVal = t.detail
 	val,ok :=t.detail.val.(string)
 	if ok == true{
@@ -62,6 +60,8 @@ func (t min)validate()error{
 		switch dataType {
 		case reflect.Float64:
 			return floatValue(*structVal,t.min,"min")
+		case reflect.Int32:
+			return int32value(*structVal,t.min,"min")
 		default:
 			if intVal < t.min{
 				return myerr(MIN,parseName(*t.detail),t.detail.tag_value)
@@ -84,6 +84,8 @@ func (t max)validate()error{
 		switch dataType {
 		case reflect.Float64:
 			return floatValue(*structVal,t.max,"max")
+		case reflect.Int32:
+			return int32value(*structVal,t.max,"max")
 		default:
 			if intVal > t.max{
 				return myerr(MAX,parseName(*t.detail),t.detail.tag_value)
@@ -181,6 +183,21 @@ func floatValue(value structDetail,compare int,tipe string)(err error){
 		}
 	case "max":
 		if floatVal > compareVal{
+			return myerr(MAX,parseName(value),value.tag_value)
+		}
+	}
+	return nil
+}
+func int32value(value structDetail,compare int,tipe string)(err error){
+	int32val := value.val.(int32)
+	compareVal := int32(compare)
+	switch tipe {
+	case "min":
+		if int32val < compareVal{
+			return myerr(MIN,parseName(value),value.tag_value)
+		}
+	case "max":
+		if int32val > compareVal{
 			return myerr(MAX,parseName(value),value.tag_value)
 		}
 	}
