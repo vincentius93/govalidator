@@ -7,69 +7,77 @@ import (
 
 // User contains user information
 type User struct {
-	FirstName      string 	`json:"first_name,omitempty"`
-	LastName       string	`json:"last_name"`
+	FirstName      string `json:"first_name,omitempty"`
+	LastName       string `json:"last_name"`
 	Age            uint8
 	Email          string
 	FavouriteColor string
-	Myage			int		   `min:"1" max:"10"`
-	Address			Address
+	Myage          int `min:"1" max:"10"`
+	Address        Address
 }
 
 // Address houses a users address information
 type Address struct {
-	Street string 	`format:"email" type:"text"`
-	City   string	`format:"alphanumeric"`
-	Planet string 	`startswith:"u" endswith:"s"`
-	Phone  string 	`min:"1" max:"10" type:"number"`
+	Street        string `format:"email" type:"text"`
+	City          string `format:"alphanumeric"`
+	Planet        string `startswith:"u" endswith:"s"`
+	Phone         string `min:"1" max:"10" type:"number"`
+	DetailAddress string `match:"[0-9]"`
 }
 type User1 struct {
-	FirstName      string		`value_of:"jhonny,john" field:"required"`
+	FirstName      string `value_of:"jhonny,john" field:"required"`
 	LastName       int
-	Age            float64		`json:"umur" min:"4" max:"100" field:"required"`
+	Age            float64 `json:"umur" min:"4" max:"100" field:"required"`
 	Email          string
-	FavouriteColor []string		`field:"required"`
-	Myage			int			`min:"1" max:"10"`
-	Address			[]Address
-	Testing 		float64		`field:"required"`
+	FavouriteColor []string `field:"required"`
+	Myage          int      `min:"1" max:"10"`
+	Address        []Address
+	Testing        float64 `field:"required"`
 }
 
 func main() {
-	fmt.Println("RETURN VALUE OF SIMPLE STRUCT")
-	simpleStruct()
-	fmt.Println("RETURN VALUE OF SIMPLE NESTEDSTRUCT")
-	nestedSturct()
-	fmt.Println("RETURN VALUE OF ARRAY STRUCT")
-	arrayStruct()
-	fmt.Println("RETURN VALUE OF NESTED ARRAY STRUCT")
-	nestedArrayStruct()
+	//fmt.Println("RETURN VALUE OF SIMPLE STRUCT")
+	//simpleStruct()
+	//fmt.Println("RETURN VALUE OF SIMPLE NESTEDSTRUCT")
+	//nestedSturct()
+	//fmt.Println("RETURN VALUE OF ARRAY STRUCT")
+	//arrayStruct()
+	//fmt.Println("RETURN VALUE OF NESTED ARRAY STRUCT")
+	//nestedArrayStruct()
+	CustomRegexValidate()
 }
 
-func simpleStruct(){
-	d := Address{City:"BANDUNG TEST 123",Phone:"9663",Street:"aas@gmail.com",Planet:"uranus"}
+func simpleStruct() {
+	d := Address{City: "BANDUNG TEST 123", Phone: "9663", Street: "aas@gmail.com", Planet: "uranus"}
 	err := validator.Validate(d)
 	fmt.Println(err)
 }
 
-func nestedSturct(){
-	d := Address{City:"BANDUNG",Phone:"88766524928347384",Street:"asd@gmail.com"}
-	a := User{FirstName:"udin",Age:0,Myage:3,Address:d}
+func nestedSturct() {
+	d := Address{City: "BANDUNG", Phone: "88766524928347384", Street: "asd@gmail.com"}
+	a := User{FirstName: "udin", Age: 0, Myage: 3, Address: d}
 	err := validator.Validate(a)
 	fmt.Println(err)
 }
 
-func arrayStruct(){
+func arrayStruct() {
 	var d []Address
-	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@gmail.com"})
-	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"mars",Street:"asd@agmail.com"})
+	d = append(d, Address{City: "ASD", Phone: "asd", Planet: "uranus", Street: "asd@gmail.com"})
+	d = append(d, Address{City: "ASD", Phone: "asd", Planet: "mars", Street: "asd@agmail.com"})
 	err := validator.Validate(d)
 	fmt.Println(err)
 }
-func nestedArrayStruct(){
+func nestedArrayStruct() {
 	var d []Address
-	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@gmail.com"})
-	d = append(d,Address{City:"ASD",Phone:"asd",Planet:"uranus",Street:"asd@agmail.com"})
-	a := User1{FirstName:"  ",Age:4.5,Myage:8,FavouriteColor:[]string{"asd"},Address:d}
+	d = append(d, Address{City: "ASD", Phone: "asd", Planet: "uranus", Street: "asd@gmail.com"})
+	d = append(d, Address{City: "ASD", Phone: "asd", Planet: "uranus", Street: "asd@agmail.com"})
+	a := User1{FirstName: "  ", Age: 4.5, Myage: 8, FavouriteColor: []string{"asd"}, Address: d}
 	err := validator.Validate(a)
+	fmt.Println(err)
+}
+
+func CustomRegexValidate() {
+	d := Address{City: "BANDUNG", Phone: "8876652492", Street: "asd@gmail.com", DetailAddress: "ABC"}
+	err := validator.Validate(d)
 	fmt.Println(err)
 }
