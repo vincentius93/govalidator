@@ -1,65 +1,46 @@
 package validator
 
-import "errors"
+type num_error int
 
 const(
-	STRUCT_ERROR num_error = iota
-	ISREQUIRED
-	INVALID_INT
-	INVALID_EMAIL
-	INVALID_TYPE
-	INVALID_STRING
-	MIN
-	MAX
-	STARTS_WITH
-	ENDS_WITH
-	VALUE_OF
-	INVALID_CONVERSION_INT
-	INVALID_ALPHABET
-	INVALID_ALPHANUMERIC
-	MATCHSTRING
+	invalidStruct num_error = iota
+	isRequiredString
+	isRequiredNumber
+	isRequiredSlice
+	invalidNumberType
+	invalidTextType
+	invalidEmailFormat
+	invalidAlphabetFormat
+	invalidAlphanumericFormat
+	invalidMinValueString
+	invalidMinValueNumber
+	invalidMaxValueString
+	invalidMaxValueNumber
+	invalidRegexFormat
+	invalidStartsWith
+	invalidEndsWith
+	invalidValueOf
+
 )
 func (num num_error)String()string{
 	error := [...]string{
 		"Not a struct type or memory address of struct!",
-		"Is required!",
-		"Expected number value!",
-		"Email format invalid",
-		"Invalid type of tag!",
-		"Expected string value!",
-		"Should be greater than",
-		"Should be less than",
-		"Should starts with",
-		"Should ends with",
-		"Missing value, value should be one of",
-		"Invalid integer conversion for number type",
-		"Alphabet format invalid!",
-		"Alphanumeric format invalid!",
-		"Invalid Format",
+		"value is required!",
+		"value is required, minimum 1!",
+		"value is required, minimum 1 value!",
+		"invalid type of number",
+		"invalid type of text",
+		"value format is not email",
+		"value format is not alphabet",
+		"value format is not alphanumeric",
+		"should be greather than %s %s",
+		"should be greather than %s",
+		"should be lower than %s %s",
+		"should be lower chan %s",
+		"invalid value of expression",
+		"value should be starts with %s \"",
+		"value should be ends with $s \"",
+		"value should be contains one of %s",
 	}
 	return error[num]
-}
-func parseName(st structDetail)string{
-	if st.json_name== ""{
-		return st.name
-	}
-	return st.json_name
-}
-func myerr (num num_error,args ...interface{})error{
-
-	new_err := errors.New(num.String())
-	struct_name := ""
-	msg :=""
-	if len(args) ==1{
-		struct_name = " ( "+args[0].(string)+" )"
-		msg = struct_name
-	}
-	if len(args) ==2{
-		struct_name = " ( "+args[0].(string)+" )"
-		struct_value := " "+args[1].(string)+" "
-		msg =struct_value + struct_name
-	}
-	new_err = errors.New(num.String() +msg)
-
-	return new_err
 }

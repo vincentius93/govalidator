@@ -1,128 +1,117 @@
 package validator
 
 import (
+	"errors"
 	"reflect"
-	"strconv"
-	"strings"
 )
 
-func Validate(mystruct interface{}) (err error) {
-	field := reflect.TypeOf(mystruct)
-	value := reflect.ValueOf(mystruct)
+func Validate(data interface{})error{
+	field := reflect.TypeOf(data)
+	value := reflect.ValueOf(data)
+
 	if field.Kind() != reflect.Struct && field.Kind() != reflect.Slice {
-		return myerr(STRUCT_ERROR)
+		return errors.New(invalidStruct.String())
 	}
-	switch field.Kind() {
-	case reflect.Slice:
-		err = fetchSlice(value)
+	if field.Kind() == reflect.Slice{
+		err := fetchSliceType(value)
 		if err != nil {
-			return
+			return err
 		}
-	default:
-		for i := 0; i < field.NumField(); i++ {
-			type_kind := field.Field(i).Type.Kind()
-			val := value.Field(i)
-			if !val.CanInterface() {
-				continue
-			}
-			value_kind := reflect.TypeOf(val).Kind()
-			if type_kind == reflect.Struct || type_kind == reflect.Slice && value_kind != reflect.Slice {
-				err = Validate(val.Interface())
-			} else if type_kind != reflect.Map || type_kind != reflect.Array {
-				err = validateTags(field.Field(i), val.Interface())
-			}
+	}
+
+	for a := 0; a < field.NumField(); a ++{
+		dataField := field.Field(a)
+		kind := dataField.Type.Kind()
+		dataValue := value.Field(a)
+		if dataValue.IsZero() {
+			continue
+		}
+		switch kind {
+		case reflect.Map, reflect.Slice:
+			err := fetchMapSlice(dataField,value.Field(a))
 			if err != nil {
-				return
+				return err
+			}
+			continue
+		case reflect.Struct:
+			err :=  Validate(value.Field(a).Interface())
+			if err != nil {
+				return err
+			}
+			continue
+		case reflect.Ptr:
+			dataValue = dataValue.Elem()
+			switch dataValue.Kind() {
+			case reflect.Struct:
+				err :=  Validate(value.Field(a).Elem().Interface())
+				if err != nil {
+					return err
+				}
+			}
+		}
+
+		if !dataValue.CanInterface(){
+			continue
+		}
+		err :=  searchAndValidate(dataField, dataValue)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func searchAndValidate(data reflect.StructField, value reflect.Value)error{
+
+	for b := allConst-1 ; b >= 0; b -- {
+		tagValue,status := data.Tag.Lookup(b.getString())
+		if status && tagValue != "" {
+			err := b.validate(value,tagValue)
+			if err != nil {
+				return errors.New(data.Name+" "+err.Error())
 			}
 		}
 	}
-	return
+	return nil
 }
-func validateTags(field reflect.StructField, value interface{}) (err error) {
-	for i := 0; i < len(tags); i++ {
-		tag, stat := field.Tag.Lookup(tags[i])
-		field_tag, stat_required := field.Tag.Lookup("field")
-		json_tag, json_status := field.Tag.Lookup("json")
-		required := false
-		if stat == true {
-			if stat_required == true && field_tag == "required" {
-				required = true
+
+func fetchMapSlice(data reflect.StructField, value reflect.Value)error{
+
+	tagValue,status := data.Tag.Lookup(field.getString())
+	if status {
+		err := field.validate(value, tagValue)
+		if err != nil {
+			return err
+		}
+	}
+
+	switch data.Type.Kind() {
+	case reflect.Map:
+		for _,v := range value.MapKeys(){
+			err := searchAndValidate(data, value.MapIndex(v))
+			if err != nil {
+				return err
 			}
-			json_name := ""
-			if json_status {
-				jname := strings.Split(json_tag, ",")
-				json_name = jname[0]
-			}
-			structInfo := structDetail{
-				name:      field.Name,
-				val:       value,
-				tag_name:  tags[i],
-				tag_value: tag,
-				required:  required,
-				json_name: json_name,
-			}
-			err := getType(&structInfo).validate()
+		}
+	case reflect.Slice:
+		for a := 0 ; a < value.Len(); a++{
+			err := searchAndValidate(data, value.Index(a))
 			if err != nil {
 				return err
 			}
 		}
 	}
-	return err
-}
-func getType(s *structDetail) myvalidator {
-	tagsValue := map[string]myvalidator{
-		"email":        email{s},
-		"text":         text{s},
-		"number":       number{s},
-		"required":     required{s},
-		"default":      def{s},
-		"alphabet":     alphabet{s},
-		"alphanumeric": alphanumeric{s},
-		"match":        match{s},
-	}
-	res := tagsValue["default"]
-	switch s.tag_name {
-	case "min":
-		lenChar, err := strconv.Atoi(s.tag_value)
-		if err != nil {
-			res = tagsValue["default"]
-		}
-		tagsValue[s.tag_name] = min{min: lenChar, detail: s}
-		res = tagsValue["min"]
-	case "max":
-		lenChar, err := strconv.Atoi(s.tag_value)
-		if err != nil {
-			res = tagsValue["default"]
-		}
-		tagsValue[s.tag_name] = max{max: lenChar, detail: s}
-		res = tagsValue["max"]
-	case "startswith":
-		tagsValue[s.tag_name] = startswith{s}
-		res = tagsValue["startswith"]
-	case "endswith":
-		tagsValue[s.tag_name] = endswith{s}
-		res = tagsValue["endswith"]
-	case "value_of":
-		tagsValue[s.tag_name] = valueOf{s}
-		res = tagsValue["value_of"]
-	case "match":
-		tagsValue[s.tag_name] = match{s}
-		res = tagsValue["match"]
-	default:
-		if _, ok := tagsValue[s.tag_value]; ok {
-			res = tagsValue[s.tag_value]
-		}
-	}
-	return res
+
+	return nil
 }
 
-func fetchSlice(t reflect.Value) (err error) {
-	for i := 0; i < t.Len(); i++ {
-		val := t.Index(i).Interface()
-		err = Validate(val)
+func fetchSliceType(data reflect.Value)error{
+
+	for a := 0 ; a < data.Len(); a++{
+		err := Validate(data.Index(a).Interface())
 		if err != nil {
-			return
+			return err
 		}
 	}
-	return err
+	return nil
 }

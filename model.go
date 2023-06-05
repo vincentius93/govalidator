@@ -1,51 +1,65 @@
 package validator
 
-var tags =[...]string{
-	"field",//required
-	"type", //number, text
-	"min", //number of min value
-	"max", // number of max value
-	"format",//email
-	"startswith",
-	"endswith",
-	"value_of",
-	"match",
+import "reflect"
+
+type validateType int
+
+const (
+	max validateType = iota
+	min
+	field
+	startsWith
+	endsWith
+	value_of
+	format
+	fieldType
+	match
+	allConst
+)
+
+func (v validateType)getString()string{
+	data := []string{
+		"max",
+		"min",
+		"field",
+		"startswith",
+		"endswith",
+		"value_of",
+		"format",
+		"fieldType",
+		"match",
+	}
+	return data[v]
 }
 
 const (
-	MAIL_FORMAT  = `\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z`
-	ALPHANUMERIC = `^[A-Za-z0-9 ]*$`
-	ALPHABET = `^[A-Za-z ]*$`
+	mail_format  = `\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z`
+	alphanumericFormat = `^[A-Za-z0-9 ]*$`
+	alphabetFormat = `^[A-Za-z ]*$`
+	numeric = `^[0-9]*$`
+	email = "email"
+	alphanumeric = "alphanumeric"
+	required = "required"
+	number = "number"
+	text = "text"
+	alphabet = "alphabet"
 )
 
-type myvalidator interface {
-	validate()(error)
+type structValidate struct {
+	TagVAlue  string
+	Value     interface{}
+	BasedValue reflect.Value
+	ValueType reflect.Kind
 }
-type structDetail struct {
-	name 		string
-	val			interface{}
-	tag_name	string
-	tag_value	string
-	json_name	string
-	required	bool
-}
-type num_error int
-type def struct {*structDetail}
-type number struct {*structDetail}
-type text struct {*structDetail}
-type email struct {*structDetail}
-type alphanumeric struct{*structDetail}
-type alphabet struct {*structDetail}
-type required struct {*structDetail}
-type startswith struct {*structDetail}
-type endswith struct {*structDetail}
-type valueOf struct {*structDetail}
-type match struct {*structDetail}
-type min struct {
-	min 		int
-	detail 		*structDetail
-}
-type max struct {
-	max 		int
-	detail 		*structDetail
+
+type validateInterface interface {
+	fieldType() error
+	format() error
+	min() error
+	max() error
+	valueOf() error
+	startsWith() error
+	endsWith() error
+	field() error
+	match() error
 }

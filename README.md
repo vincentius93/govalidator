@@ -7,7 +7,7 @@ GoValidator is a Package validator implements value validations for structs and 
 ## Tags
 ----
 - ##### [`field` ] value : required
-- ##### [`type`] value : number / text
+- ##### [`fieldType`] value : number / text
 - ##### [`min`] value : (string number)
 - ##### [`max`] value : (string number)
 - ##### [`startswith`] value : (string)
@@ -49,6 +49,13 @@ Int/numeric : validate the value
 ### 24-02-2021
 - Handle int32 data type
 ----
+### 01-06-2023
+- Refactoring code structure
+- Support to handle pointer struct or data type
+- Support to handle interfacing struct type
+- Support to handle slice of data type validation
+- Change tags "type" -> "fieldType"
+----
 ### Installation
 
 ```
@@ -60,8 +67,8 @@ go get github.com/vincentius93/govalidator
 `````
 type User struct {
 	FirstName      string       `field:"required"`
-	LastName       string       `type:"text"`
-	Age            int          `type:"number"`
+	LastName       string       `fieldType:"text"`
+	Age            int          `fieldType:"number"`
 	Email          string       `format:"email"`
 }
 
@@ -76,8 +83,8 @@ func main(){
 #### Multiple Validation
 `````
 type User struct {
-	FirstName      string       `field:"required" type:"text" max:"10"`
-	LastName       string       `field:"required" type:"text" min:"1"`
+	FirstName      string       `field:"required" fieldType:"text" max:"10"`
+	LastName       string       `field:"required" fieldType:"text" min:"1"`
 	Age            int          `type:"number" max:"1"`
 	Email          string       `format:"email"`
 }
@@ -93,9 +100,9 @@ func main(){
 #### Nested Struct validation
 `````
 type User struct {
-	FirstName      string       `field:"required" type:"text" max:"10"`
-	LastName       string       `field:"required" type:"text" min:"1"`
-	Age            int          `type:"number" max:"1"`
+	FirstName      string       `field:"required" fieldType:"text" max:"10"`
+	LastName       string       `field:"required" fieldType:"text" min:"1"`
+	Age            int          `fieldType:"number" max:"1"`
 	Email          string       `format:"email"`
 }
 type Orders struct {
@@ -116,8 +123,8 @@ func main(){
 #### Slice Struct Validation
 `````
 type User struct {
-	FirstName      string       `field:"required" type:"text" max:"10"`
-	LastName       string       `field:"required" type:"text" min:"1"`
+	FirstName      string       `field:"required" fieldType:"text" max:"10"`
+	LastName       string       `field:"required" fieldType:"text" min:"1"`
 	Age            int          `type:"number" max:"1"`
 	Email          string       `format:"email"`
 }
@@ -138,8 +145,8 @@ func main(){
 #### Nested Slice Struct Validation
 `````
 type User struct {
-	FirstName      string       `field:"required" type:"text" max:"10"`
-	LastName       string       `field:"required" type:"text" min:"1"`
+	FirstName      string       `field:"required" fieldType:"text" max:"10"`
+	LastName       string       `field:"required" fieldType:"text" min:"1"`
 	Age            int          `type:"number" max:"1"`
 	Email          string       `format:"email"`
 	Orders         []Orders
