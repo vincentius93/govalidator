@@ -34,7 +34,10 @@ func Validate(data interface{})error{
 			}
 			continue
 		case reflect.Struct:
-			err :=  Validate(value.Field(a).Interface())
+			if !dataValue.CanInterface(){
+				continue
+			}
+			err :=  Validate(dataValue.Interface())
 			if err != nil {
 				return err
 			}
@@ -49,7 +52,6 @@ func Validate(data interface{})error{
 				}
 			}
 		}
-
 		if !dataValue.CanInterface(){
 			continue
 		}
@@ -95,6 +97,13 @@ func fetchMapSlice(data reflect.StructField, value reflect.Value)error{
 		}
 	case reflect.Slice:
 		for a := 0 ; a < value.Len(); a++{
+			if value.Index(a).Kind() == reflect.Struct{
+				err :=  Validate(value.Index(a).Interface())
+				if err != nil {
+					return err
+				}
+				continue
+			}
 			err := searchAndValidate(data, value.Index(a))
 			if err != nil {
 				return err
