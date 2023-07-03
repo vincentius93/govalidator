@@ -23,9 +23,7 @@ func Validate(data interface{})error{
 		dataField := field.Field(a)
 		kind := dataField.Type.Kind()
 		dataValue := value.Field(a)
-		if dataValue.IsZero() {
-			continue
-		}
+
 		switch kind {
 		case reflect.Map, reflect.Slice:
 			err := fetchMapSlice(dataField,value.Field(a))
@@ -43,6 +41,9 @@ func Validate(data interface{})error{
 			}
 			continue
 		case reflect.Ptr:
+			if dataValue.IsNil() {
+					continue
+			}
 			dataValue = dataValue.Elem()
 			switch dataValue.Kind() {
 			case reflect.Struct:
